@@ -1,1 +1,31 @@
-export default function Header(){return <header className="top"><div className="wrap"><div className="header-main"><a href="/" className="brand brand-with-logo" aria-label="Maglie Racconta, home"><img src="/logo-maglie-racconta.jpg" alt="" className="header-logo" /><span className="brand-copy"><span className="brand-name">MAGLIE RACCONTA</span><span className="tag">La città, le persone, le storie.</span></span></a><form action="/" className="header-search"><input name="q" aria-label="Cerca articoli" placeholder="Cerca una notizia…" /><button type="submit" aria-label="Cerca">Cerca</button></form></div><nav className="nav"><a href="/">Home</a><a href="/?categoria=Cronaca">Cronaca</a><a href="/?categoria=Cultura">Cultura</a><a href="/?categoria=Eventi">Eventi</a><a href="/?categoria=Sport">Sport</a><a href="/?categoria=Persone">Persone</a><a href="/?categoria=Territorio">Territorio</a><a className="nav-cta" href="/collabora">Collabora</a></nav></div></header>
+export default function Header() {
+  return (
+    <header className="top">
+      <div className="wrap">
+        <div className="header-main">
+          <a href="/" className="brand brand-with-logo" aria-label="Maglie Racconta, home">
+            <img src="/logo-maglie-racconta.jpg" alt="" className="header-logo" />
+            <span className="brand-copy">
+              <span className="brand-name">MAGLIE RACCONTA</span>
+              <span className="tag">La città, le persone, le storie.</span>
+            </span>
+          </a>
+          <form action="/" className="header-search">
+            <input name="q" aria-label="Cerca articoli" placeholder="Cerca una notizia…" />
+            <button type="submit" aria-label="Cerca">Cerca</button>
+          </form>
+        </div>
+        <nav className="nav">
+          <a href="/">Home</a>
+          <a href="/?categoria=Cronaca">Cronaca</a>
+          <a href="/?categoria=Cultura">Cultura</a>
+          <a href="/?categoria=Eventi">Eventi</a>
+          <a href="/?categoria=Sport">Sport</a>
+          <a href="/?categoria=Persone">Persone</a>
+          <a href="/?categoria=Territorio">Territorio</a>
+          <a className="nav-cta" href="/collabora">Collabora</a>
+        </nav>
+      </div>
+    </header>
+  );
+}
