@@ -23,7 +23,6 @@ export default async function Home({searchParams}:{searchParams:{q?:string,categ
         <div className="eyebrow">Il magazine di Maglie</div>
         <h1>Le storie della nostra città, raccontate da vicino.</h1>
         <p className="lead">Cronaca, cultura, iniziative, sport e persone: uno spazio per conoscere meglio Maglie e il territorio che ci unisce.</p>
-        <form action="/" className="search-form"><input className="input" name="q" placeholder="Cerca una notizia…" defaultValue={searchParams?.q}/><button className="btn">Cerca</button></form>
       </section>
       {isFiltered ? <>
         <div className="section-heading"><div className="eyebrow">{searchParams?.categoria || 'Risultati della ricerca'}</div>{searchParams?.q && <p>Risultati per “{searchParams.q}”</p>}</div>
