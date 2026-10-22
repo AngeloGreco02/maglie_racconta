@@ -53,6 +53,7 @@ export default async function Article({ params }: { params: { slug: string } }) 
           </div>
           <h1>{article.title}</h1>
           <p className="lead">{article.excerpt}</p>
+          {article.author_name && <p style={{fontSize:14,color:"var(--muted)",marginTop:-6}}>Di {article.author_name}</p>}
           {article.cover_url && (
             <img
               src={article.cover_url}
