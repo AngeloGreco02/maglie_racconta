@@ -1,0 +1,2 @@
+import {redirect} from 'next/navigation';import {supabaseServer} from '@/lib/supabase/server';import ArticleEditor from '../ArticleEditor';
+export default async function NewArticle(){const db=supabaseServer();const {data:{user}}=await db.auth.getUser();if(!user)redirect('/admin/login');const {data:p}=await db.from('profiles').select('role').eq('id',user.id).maybeSingle();if(p?.role!=='admin')redirect('/admin');return <main className="wrap"><h1>Nuovo articolo</h1><ArticleEditor/></main>}

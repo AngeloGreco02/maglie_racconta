@@ -1,0 +1,9 @@
+import Header from '@/components/Header'; import ArticleCard from '@/components/ArticleCard'; import {supabaseServer} from '@/lib/supabase/server';
+export const revalidate=0;
+export default async function Home({searchParams}:{searchParams:{q?:string,categoria?:string}}){
+ const db=supabaseServer(); let query=db.from('articles').select('id,title,slug,excerpt,cover_url,cover_alt,category,published_at').eq('status','published').lte('published_at',new Date().toISOString()).order('published_at',{ascending:false});
+ if(searchParams?.categoria) query=query.eq('category',searchParams.categoria);
+ if(searchParams?.q) query=query.or(`title.ilike.%${searchParams.q}%,excerpt.ilike.%${searchParams.q}%`);
+ const {data:articles}=await query;
+ return <><Header/><main className="wrap"><section className="hero"><div className="eyebrow">Il magazine di Maglie</div><h1>Le storie della nostra città, raccontate da vicino.</h1><p className="lead">Cronaca, cultura, iniziative, sport e persone: uno spazio per conoscere meglio Maglie e il territorio che ci unisce.</p><form action="/" style={{display:'flex',gap:8,maxWidth:540,marginTop:22}}><input className="input" name="q" placeholder="Cerca un articolo…" defaultValue={searchParams?.q}/><button className="btn">Cerca</button></form></section><div className="eyebrow">{searchParams?.categoria||'Ultime pubblicazioni'}</div>{articles?.length?<section className="grid">{articles.map(a=><ArticleCard key={a.id} article={a}/>)}</section>:<p style={{padding:'35px 0 70px',color:'var(--muted)'}}>Non ci sono ancora articoli pubblicati in questa selezione. Le storie arriveranno qui.</p>}</main><footer className="footer"><div className="wrap"><strong>MAGLIE RACCONTA</strong><p>Un magazine indipendente dedicato alla città e alla sua comunità.</p><small>Contenuti e opinioni sono responsabilità dei rispettivi autori.</small></div></footer></>
+}
