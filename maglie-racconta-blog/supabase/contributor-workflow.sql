@@ -21,6 +21,8 @@ create table if not exists public.contributor_submissions (
   article_id uuid references public.articles(id) on delete set null
 );
 
+alter table public.articles add column if not exists author_name text;
+
 alter table public.contributor_submissions enable row level security;
 
 drop policy if exists "Contributors submit their own articles" on public.contributor_submissions;
@@ -66,11 +68,11 @@ begin
   end if;
 
   insert into public.articles
-    (title, slug, excerpt, body_html, category, cover_url, cover_alt, seo_title, seo_description, status, published_at, updated_at)
+    (title, slug, excerpt, body_html, category, cover_url, cover_alt, seo_title, seo_description, author_name, status, published_at, updated_at)
   values
     (v_submission.title, v_submission.slug, v_submission.excerpt, v_submission.body_html,
      v_submission.category, v_submission.cover_url, v_submission.cover_alt,
-     v_submission.seo_title, v_submission.seo_description, 'published', now(), now())
+     v_submission.seo_title, v_submission.seo_description, v_submission.author_name, 'published', now(), now())
   returning id into v_article_id;
 
   update public.contributor_submissions
