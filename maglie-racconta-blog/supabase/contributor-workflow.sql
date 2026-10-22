@@ -28,7 +28,14 @@ alter table public.contributor_submissions enable row level security;
 drop policy if exists "Contributors submit their own articles" on public.contributor_submissions;
 create policy "Contributors submit their own articles"
 on public.contributor_submissions for insert to authenticated
-with check (user_id = auth.uid() and status = 'pending');
+with check (
+  user_id = auth.uid()
+  and status = 'pending'
+  and exists (
+    select 1 from public.profiles p
+    where p.id = auth.uid() and p.role in ('admin', 'contributor')
+  )
+);
 
 drop policy if exists "Contributors read own submissions or admins read all" on public.contributor_submissions;
 create policy "Contributors read own submissions or admins read all"
