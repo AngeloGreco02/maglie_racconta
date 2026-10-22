@@ -28,3 +28,5 @@ Starter autonomo Next.js + Supabase per un magazine locale con articoli, categor
 - In Supabase Storage crea il bucket `article-covers` pubblico per la visualizzazione delle copertine; limita gli upload agli utenti autenticati.
 - Verifica privacy/cookie, accessibilità, backup e contatti editoriali.
 - Questo pacchetto è una base applicativa da configurare e collaudare: non è ancora pubblicato e non include credenziali, dominio o account Supabase già configurati.
+  
+Progetto web Maglie Racconta
