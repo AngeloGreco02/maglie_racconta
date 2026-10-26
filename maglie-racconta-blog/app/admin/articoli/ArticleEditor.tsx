@@ -18,6 +18,7 @@ export default function ArticleEditor({article}:{article?:any}){
   const [seoDesc,SED]=useState(article?.seo_description||'');
   const [message,SM]=useState('');
   const [busy,B]=useState(false);
+  const [uploading,U]=useState(false);
 
   function slugify(v:string){
     return v.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
@@ -28,13 +29,25 @@ export default function ArticleEditor({article}:{article?:any}){
     const allowedTypes=['image/jpeg','image/png','image/webp'];
     if(!allowedTypes.includes(file.type)){SM('Formato non consentito. Usa JPG, PNG o WebP.');return;}
     if(file.size>5*1024*1024){SM('Immagine troppo grande: il limite è 5 MB.');return;}
-    const db=supabaseBrowser();
-    const ext=file.type==='image/png'?'png':file.type==='image/webp'?'webp':'jpg';
-    const path=`${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-    const {error}=await db.storage.from('article-covers').upload(path,file,{upsert:false});
-    if(error){SM('Caricamento non riuscito: '+error.message);return;}
-    const {data}=db.storage.from('article-covers').getPublicUrl(path);
-    SU(data.publicUrl);SM('Copertina caricata.');
+    U(true);SM('Caricamento della copertina in corso…');
+    try{
+      const db=supabaseBrowser();
+      const ext=file.type==='image/png'?'png':file.type==='image/webp'?'webp':'jpg';
+      const path=`${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const {data:uploaded,error}=await db.storage.from('article-covers').upload(path,file,{upsert:false,contentType:file.type});
+      if(error)throw error;
+      if(!uploaded?.path)throw new Error('Supabase non ha restituito il percorso del file.');
+      const {data}=db.storage.from('article-covers').getPublicUrl(uploaded.path);
+      if(!data?.publicUrl)throw new Error('Non è stato possibile generare l’URL pubblico.');
+      SU(data.publicUrl);
+      SM('Copertina caricata. URL inserito automaticamente: ricordati di salvare o pubblicare l’articolo.');
+    }catch(error:any){
+      console.error('Errore caricamento copertina:',error);
+      const detail=error?.message||error?.error_description||'Errore sconosciuto';
+      SM('Caricamento non riuscito: '+detail+'. Verifica che esista il bucket pubblico “article-covers” in Supabase Storage e che siano attive le policy di caricamento.');
+    }finally{
+      U(false);
+    }
   }
 
   function escapeHtml(value:string){
@@ -80,7 +93,7 @@ export default function ArticleEditor({article}:{article?:any}){
     <label className="label">Categoria<select className="input" value={category} onChange={e=>SC(e.target.value)}>{['Cronaca','Cultura','Eventi','Sport','Comunità','Scuola','Territorio','Opinioni'].map(x=><option key={x}>{x}</option>)}</select></label>
     <label className="label">Sommario / excerpt<textarea className="input" rows={3} value={excerpt} onChange={e=>SE(e.target.value)}/></label>
     <label className="label">Formato del testo<select className="input" value={plainTextMode?'plain':'html'} onChange={e=>SPT(e.target.value==='plain')}><option value="plain">Testo normale (senza HTML)</option><option value="html">HTML (per formattazione avanzata)</option></select></label>\n    <label className="label">Testo articolo<textarea className="input" rows={12} required value={body} onChange={e=>SB(e.target.value)} placeholder={plainTextMode?'Scrivi normalmente. Lascia una riga vuota tra un paragrafo e l’altro.':'Puoi usare HTML come <p>, <h2>, <strong> e <ul>.'}/></label>\n    {plainTextMode&&<p className="muted">Il testo normale viene trasformato automaticamente in paragrafi. Non devi conoscere l’HTML.</p>}
-    <label className="label">Carica copertina<input className="input" type="file" accept="image/jpeg,image/png,image/webp" onChange={e=>upload(e.target.files?.[0])}/></label>
+    <label className="label">Carica copertina<input className="input" type="file" accept="image/jpeg,image/png,image/webp" disabled={uploading} onChange={e=>{const file=e.target.files?.[0];void upload(file);e.currentTarget.value="";}}/>{uploading&&<span className="muted">Caricamento in corso…</span>}</label>
     {cover&&<img src={cover} alt={alt} style={{maxWidth:260,borderRadius:8}}/>}
     <label className="label">URL copertina (facoltativo)<input className="input" value={cover} onChange={e=>SU(e.target.value)}/></label>
     <label className="label">Testo alternativo immagine<input className="input" value={alt} onChange={e=>SA(e.target.value)}/></label>
@@ -89,8 +102,8 @@ export default function ArticleEditor({article}:{article?:any}){
     <label className="label">Stato<select className="input" value={status} onChange={e=>ST(e.target.value)}><option value="draft">Bozza</option><option value="published">Pubblicato</option></select></label>
     {message&&<p role="status">{message}</p>}
     <div style={{display:'flex',gap:10,flexWrap:'wrap'}}>
-      <button className="btn" disabled={busy}>Salva modifiche</button>
-      <button className="btn" type="button" disabled={busy} onClick={()=>save(true)}>Pubblica ora</button>
+      <button className="btn" disabled={busy||uploading}>Salva modifiche</button>
+      <button className="btn" type="button" disabled={busy||uploading} onClick={()=>save(true)}>Pubblica ora</button>
       {article?.id&&<button className="btn" type="button" disabled={busy} onClick={removeArticle} style={{background:'#9f2d1d'}}>Elimina articolo</button>}
       <a className="btn" style={{background:'#66737c'}} href="/admin">Annulla</a>
     </div>
