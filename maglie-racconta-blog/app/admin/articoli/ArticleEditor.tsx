@@ -20,7 +20,7 @@ export default function ArticleEditor({article}:{article?:any}){
   const [busy,B]=useState(false);
 
   function slugify(v:string){
-    return v.toLowerCase().normalize('NFD').replace(/[\\u0300-\\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+    return v.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
   }
 
   async function upload(file?:File){
@@ -43,7 +43,7 @@ export default function ArticleEditor({article}:{article?:any}){
 
   function formatBody(value:string){
     if(!plainTextMode)return value;
-    return value.trim().split(/\\n\\s*\\n/).map(paragraph=>`<p>${escapeHtml(paragraph).replace(/\\n/g,'<br />')}</p>`).join('');
+    return value.trim().split(/\n\\s*\n/).map(paragraph=>`<p>${escapeHtml(paragraph).replace(/\n/g,'<br />')}</p>`).join('');
   }
 
   async function save(publish:boolean){
