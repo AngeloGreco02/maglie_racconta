@@ -7,7 +7,7 @@ const categories = ['Cronaca', 'Cultura', 'Sport', 'Persone', 'Eventi', 'Territo
 
 export default async function Home({searchParams}:{searchParams:{q?:string,categoria?:string}}) {
   const db = supabaseServer();
-  let query = db.from('articles').select('id,title,slug,excerpt,cover_url,cover_alt,category,published_at').eq('status','published').lte('published_at',new Date().toISOString()).order('published_at',{ascending:false});
+  let query = db.from('articles').select('id,title,slug,excerpt,cover_url,cover_alt,category,published_at,author_name').eq('status','published').lte('published_at',new Date().toISOString()).order('published_at',{ascending:false});
   if (searchParams?.categoria) query = query.eq('category',searchParams.categoria);
   if (searchParams?.q) query = query.or(`title.ilike.%${searchParams.q}%,excerpt.ilike.%${searchParams.q}%`);
   const {data:articles} = await query;
