@@ -9,6 +9,7 @@ export default function ArticleEditor({article}:{article?:any}){
   const [excerpt,SE]=useState(article?.excerpt||'');
   const [body,SB]=useState(article?.body_html||'');
   const [category,SC]=useState(article?.category||'Cronaca');
+  const [authorName,SAN]=useState(article?.author_name||'Angelo Greco');
   const [status,ST]=useState(article?.status||'draft');
   const [cover,SU]=useState(article?.cover_url||'');
   const [alt,SA]=useState(article?.cover_alt||'');
@@ -39,7 +40,7 @@ export default function ArticleEditor({article}:{article?:any}){
     B(true);SM('Salvataggio…');
     const db=supabaseBrowser();
     const payload={
-      title,slug:slug||slugify(title),excerpt,body_html:body,category,
+      title,slug:slug||slugify(title),excerpt,body_html:body,category,author_name:authorName.trim(),
       status:publish?'published':status,cover_url:cover||null,cover_alt:alt||null,
       seo_title:seoTitle||null,seo_description:seoDesc||null,
       published_at:publish?(article?.published_at||new Date().toISOString()):(status==='published'?(article?.published_at||new Date().toISOString()):null),
@@ -65,6 +66,7 @@ export default function ArticleEditor({article}:{article?:any}){
   return <form className="form" onSubmit={e=>{e.preventDefault();save(false)}}>
     <label className="label">Titolo<input className="input" required value={title} onChange={e=>{S(e.target.value);if(!article)SS(slugify(e.target.value));}}/></label>
     <label className="label">Slug URL<input className="input" required value={slug} onChange={e=>SS(slugify(e.target.value))}/></label>
+    <label className="label">Autore / autrice<input className="input" required value={authorName} onChange={e=>SAN(e.target.value)} placeholder="Nome e cognome" /></label>
     <label className="label">Categoria<select className="input" value={category} onChange={e=>SC(e.target.value)}>{['Cronaca','Cultura','Eventi','Sport','Comunità','Scuola','Territorio','Opinioni'].map(x=><option key={x}>{x}</option>)}</select></label>
     <label className="label">Sommario / excerpt<textarea className="input" rows={3} value={excerpt} onChange={e=>SE(e.target.value)}/></label>
     <label className="label">Testo articolo (HTML consentito)<textarea className="input" rows={12} required value={body} onChange={e=>SB(e.target.value)} placeholder="Scrivi il testo. Puoi usare paragrafi HTML come <p>...</p>, <h2>...</h2> e <strong>...</strong>."/></label>
