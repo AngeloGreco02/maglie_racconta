@@ -8,7 +8,7 @@ export default function ArticleEditor({article}:{article?:any}){
   const [slug,SS]=useState(article?.slug||'');
   const [excerpt,SE]=useState(article?.excerpt||'');
   const [body,SB]=useState(article?.body_html||'');
-  const [plainTextMode,SPT]=useState(true);
+  const [plainTextMode,SPT]=useState(!(article?.body_html||'').trim().startsWith('<'));
   const [category,SC]=useState(article?.category||'Cronaca');
   const [authorName,SAN]=useState(article?.author_name||'Angelo Greco');
   const [status,ST]=useState(article?.status||'draft');
