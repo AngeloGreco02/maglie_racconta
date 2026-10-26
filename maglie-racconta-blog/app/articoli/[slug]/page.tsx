@@ -20,14 +20,32 @@ const cleanArticleHtml = (html: string) => sanitizeHtml(html, {
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   const { data: article } = await supabaseServer()
     .from('articles')
-    .select('title,seo_title,seo_description,excerpt')
+    .select('title,seo_title,seo_description,excerpt,cover_url,cover_alt')
     .eq('slug', params.slug)
     .eq('status', 'published')
     .maybeSingle();
 
+  const title = article?.seo_title || article?.title || 'Articolo | Maglie Racconta';
+  const description = article?.seo_description || article?.excerpt || '';
+  const image = article?.cover_url ? [{ url: article.cover_url, alt: article.cover_alt || title }] : [];
+
   return {
-    title: article?.seo_title || article?.title || 'Articolo | Maglie Racconta',
-    description: article?.seo_description || article?.excerpt || ''
+    title,
+    description,
+    openGraph: {
+      type: 'article',
+      locale: 'it_IT',
+      siteName: 'Maglie Racconta',
+      title,
+      description,
+      ...(image.length ? { images: image } : {})
+    },
+    twitter: {
+      card: image.length ? 'summary_large_image' : 'summary',
+      title,
+      description,
+      ...(image.length ? { images: image.map(item => item.url) } : {})
+    }
   };
 }
 
