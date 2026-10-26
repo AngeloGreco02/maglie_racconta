@@ -8,6 +8,7 @@ export default function ArticleEditor({article}:{article?:any}){
   const [slug,SS]=useState(article?.slug||'');
   const [excerpt,SE]=useState(article?.excerpt||'');
   const [body,SB]=useState(article?.body_html||'');
+  const [plainTextMode,SPT]=useState(true);
   const [category,SC]=useState(article?.category||'Cronaca');
   const [authorName,SAN]=useState(article?.author_name||'Angelo Greco');
   const [status,ST]=useState(article?.status||'draft');
@@ -36,11 +37,20 @@ export default function ArticleEditor({article}:{article?:any}){
     SU(data.publicUrl);SM('Copertina caricata.');
   }
 
+  function escapeHtml(value:string){
+    return value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+
+  function formatBody(value:string){
+    if(!plainTextMode)return value;
+    return value.trim().split(/\\n\\s*\\n/).map(paragraph=>`<p>${escapeHtml(paragraph).replace(/\\n/g,'<br />')}</p>`).join('');
+  }
+
   async function save(publish:boolean){
     B(true);SM('Salvataggio…');
     const db=supabaseBrowser();
     const payload={
-      title,slug:slug||slugify(title),excerpt,body_html:body,category,author_name:authorName.trim(),
+      title,slug:slug||slugify(title),excerpt,body_html:formatBody(body),category,author_name:authorName.trim(),
       status:publish?'published':status,cover_url:cover||null,cover_alt:alt||null,
       seo_title:seoTitle||null,seo_description:seoDesc||null,
       published_at:publish?(article?.published_at||new Date().toISOString()):(status==='published'?(article?.published_at||new Date().toISOString()):null),
@@ -69,7 +79,7 @@ export default function ArticleEditor({article}:{article?:any}){
     <label className="label">Autore / autrice<input className="input" required value={authorName} onChange={e=>SAN(e.target.value)} placeholder="Nome e cognome" /></label>
     <label className="label">Categoria<select className="input" value={category} onChange={e=>SC(e.target.value)}>{['Cronaca','Cultura','Eventi','Sport','Comunità','Scuola','Territorio','Opinioni'].map(x=><option key={x}>{x}</option>)}</select></label>
     <label className="label">Sommario / excerpt<textarea className="input" rows={3} value={excerpt} onChange={e=>SE(e.target.value)}/></label>
-    <label className="label">Testo articolo (HTML consentito)<textarea className="input" rows={12} required value={body} onChange={e=>SB(e.target.value)} placeholder="Scrivi il testo. Puoi usare paragrafi HTML come <p>...</p>, <h2>...</h2> e <strong>...</strong>."/></label>
+    <label className="label">Formato del testo<select className="input" value={plainTextMode?'plain':'html'} onChange={e=>SPT(e.target.value==='plain')}><option value="plain">Testo normale (senza HTML)</option><option value="html">HTML (per formattazione avanzata)</option></select></label>\n    <label className="label">Testo articolo<textarea className="input" rows={12} required value={body} onChange={e=>SB(e.target.value)} placeholder={plainTextMode?'Scrivi normalmente. Lascia una riga vuota tra un paragrafo e l’altro.':'Puoi usare HTML come <p>, <h2>, <strong> e <ul>.'}/></label>\n    {plainTextMode&&<p className="muted">Il testo normale viene trasformato automaticamente in paragrafi. Non devi conoscere l’HTML.</p>}
     <label className="label">Carica copertina<input className="input" type="file" accept="image/jpeg,image/png,image/webp" onChange={e=>upload(e.target.files?.[0])}/></label>
     {cover&&<img src={cover} alt={alt} style={{maxWidth:260,borderRadius:8}}/>}
     <label className="label">URL copertina (facoltativo)<input className="input" value={cover} onChange={e=>SU(e.target.value)}/></label>
