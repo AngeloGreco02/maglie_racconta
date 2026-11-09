@@ -26,20 +26,26 @@ export default function ContributorLogin() {
     });
 
     if (error) {
-      setError('Accesso non riuscito. Verifica le credenziali fornite dalla redazione.');
+      setError('Accesso non riuscito: ' + error.message);
       setBusy(false);
       return;
     }
 
     const { data: { user } } = await db.auth.getUser();
 
-    const { data: profile } = await db
+    if (!user) {
+      setError('Impossibile verificare l’account.');
+      setBusy(false);
+      return;
+    }
+
+    const { data: profile, error: profileError } = await db
       .from('profiles')
       .select('role')
-      .eq('id', user?.id)
+      .eq('id', user.id)
       .maybeSingle();
 
-    if (!profile || !['admin', 'contributor'].includes(profile.role)) {
+    if (profileError || !profile || !['admin', 'contributor'].includes(profile.role)) {
       await db.auth.signOut();
       setError('Questo account non è abilitato come collaboratore. Contatta la redazione.');
       setBusy(false);
@@ -57,17 +63,27 @@ export default function ContributorLogin() {
     setError('');
     setNotice('');
 
-    const { error } = await supabaseBrowser().auth.resetPasswordForEmail(
-      email,
-      {
-        redirectTo: `${window.location.origin}/collabora/nuova-password`
-      }
-    );
+    try {
+      const db = supabaseBrowser();
 
-    if (error) {
-      setError('Non è stato possibile inviare l’email. Riprova.');
-    } else {
-      setNotice('Se l’indirizzo è associato a un account, riceverai un’email con le istruzioni per reimpostare la password.');
+      const { error } = await db.auth.resetPasswordForEmail(
+        email.trim(),
+        {
+          redirectTo: `${window.location.origin}/collabora/nuova-password`
+        }
+      );
+
+      if (error) {
+        console.error('Errore recupero password:', error);
+        setError('Errore Supabase: ' + error.message);
+      } else {
+        setNotice(
+          'Se l’indirizzo è associato a un account, riceverai un’email con le istruzioni per reimpostare la password.'
+        );
+      }
+    } catch (err) {
+      console.error('Errore imprevisto:', err);
+      setError('Si è verificato un errore imprevisto durante l’invio.');
     }
 
     setBusy(false);
@@ -85,7 +101,10 @@ export default function ContributorLogin() {
           : 'Usa l’account autorizzato dalla redazione. Non è prevista la registrazione pubblica.'}
       </p>
 
-      <form className="form" onSubmit={forgot ? recoverPassword : submit}>
+      <form
+        className="form"
+        onSubmit={forgot ? recoverPassword : submit}
+      >
         <label className="label">
           Email
           <input
@@ -112,8 +131,17 @@ export default function ContributorLogin() {
           </label>
         )}
 
-        {error && <p role="alert">{error}</p>}
-        {notice && <p role="status">{notice}</p>}
+        {error && (
+          <p role="alert" style={{ color: '#b83224', overflowWrap: 'anywhere' }}>
+            {error}
+          </p>
+        )}
+
+        {notice && (
+          <p role="status">
+            {notice}
+          </p>
+        )}
 
         <button className="btn" disabled={busy}>
           {busy
@@ -152,7 +180,9 @@ export default function ContributorLogin() {
         )}
       </p>
 
-      <p><a href="/collabora">← Come collaborare</a></p>
+      <p>
+        <a href="/collabora">← Come collaborare</a>
+      </p>
     </main>
   );
 }
