@@ -13,24 +13,41 @@ export default function NuovaPassword() {
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
+    let active = true;
+
     async function verifyLink() {
       const supabase = supabaseBrowser();
       const params = new URLSearchParams(window.location.search);
-      const code = params.get('code');
 
-      if (code) {
-        const { error } = await supabase.auth.exchangeCodeForSession(code);
-
-        if (error) {
-          setError('Il link di recupero non è valido o è scaduto. Richiedi una nuova email.');
-          return;
-        }
+      const authError = params.get('error_description');
+      if (authError) {
+        if (active) setError(decodeURIComponent(authError.replace(/\+/g, ' ')));
+        return;
       }
 
-      const { data, error } = await supabase.auth.getSession();
+      const code = params.get('code');
+
+      // Prima controlliamo se Supabase ha già creato la sessione.
+      let { data, error } = await supabase.auth.getSession();
+
+      if (!data.session && code) {
+        const result = await supabase.auth.exchangeCodeForSession(code);
+
+        if (result.error) {
+          if (active) {
+            setError('Errore Supabase: ' + result.error.message);
+          }
+          return;
+        }
+
+        ({ data, error } = await supabase.auth.getSession());
+      }
+
+      if (!active) return;
 
       if (error || !data.session) {
-        setError('Sessione di recupero non valida. Richiedi un nuovo link.');
+        setError('Sessione non valida. Dettaglio: ' +
+          (error?.message || 'Nessuna sessione trovata.'));
         return;
       }
 
@@ -38,6 +55,10 @@ export default function NuovaPassword() {
     }
 
     verifyLink();
+
+    return () => {
+      active = false;
+    };
   }, []);
 
   async function updatePassword(e: React.FormEvent) {
@@ -56,17 +77,20 @@ export default function NuovaPassword() {
 
     setBusy(true);
 
-    const { error } = await supabaseBrowser().auth.updateUser({
+    const supabase = supabaseBrowser();
+
+    const { error } = await supabase.auth.updateUser({
       password
     });
 
     if (error) {
-      setError('Non è stato possibile aggiornare la password. Riprova.');
+      setError('Errore Supabase: ' + error.message);
       setBusy(false);
       return;
     }
 
-    await supabaseBrowser().auth.signOut();
+    await supabase.auth.signOut();
+
     setSuccess(true);
     setBusy(false);
   }
@@ -87,7 +111,7 @@ export default function NuovaPassword() {
             </a>
           </>
         ) : !ready ? (
-          <p>
+          <p role="alert">
             {error || 'Verifica del collegamento in corso…'}
           </p>
         ) : (
