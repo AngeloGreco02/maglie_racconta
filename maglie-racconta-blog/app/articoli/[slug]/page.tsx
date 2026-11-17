@@ -6,6 +6,7 @@ import LikeButton from '@/components/engagement/LikeButton';
 import ShareButtons from '@/components/engagement/ShareButtons';
 import Comments from '@/components/engagement/Comments';
 import ViewCounter from '@/components/engagement/ViewCounter';
+import { authorHref } from '@/lib/views';
 
 const cleanArticleHtml = (html: string) => sanitizeHtml(html, {
   allowedTags: [
@@ -91,7 +92,7 @@ export default async function Article({ params }: { params: { slug: string } }) 
           <h1>{article.title}</h1>
           <p className="lead">{article.excerpt}</p>
           <p className="article-byline">
-            {article.author_name && <span>Di {article.author_name}</span>}
+            {article.author_name && <span>Di <a className="author-link" href={authorHref(article.author_name)}>{article.author_name}</a></span>}
             <ViewCounter articleId={article.id} initialCount={Number(views?.view_count ?? 0)} />
           </p>
           {article.cover_url && (
