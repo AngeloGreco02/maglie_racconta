@@ -44,6 +44,6 @@ export default async function Home({searchParams}:{searchParams:{q?:string,categ
         <section className="collab-banner"><div><div className="eyebrow">La città ha tante voci</div><h2>Anche tu hai una storia da raccontare?</h2><p>Segnalaci una notizia, racconta un'iniziativa o unisciti alla redazione di Maglie Racconta.</p></div><a className="btn" href="/collabora">Collabora con noi <span aria-hidden="true">→</span></a></section>
       </>}
     </main>
-    <footer className="footer"><div className="wrap footer-inner"><div><strong>MAGLIE RACCONTA</strong><p>Un magazine indipendente dedicato alla città e alla sua comunità.</p></div><small>Contenuti e opinioni sono responsabilità dei rispettivi autori.</small></div></footer>
+    <footer className="footer"><div className="wrap footer-inner"><div><strong>MAGLIE RACCONTA</strong><p>Un magazine indipendente dedicato alla città e alla sua comunità.</p></div><small>Contenuti e opinioni sono responsabilità dei rispettivi autori. · <a href="/privacy" style={{textDecoration:'underline'}}>Privacy</a></small></div></footer>
   </>;
 }

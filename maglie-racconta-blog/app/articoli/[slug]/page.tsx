@@ -102,7 +102,7 @@ export default async function Article({ params }: { params: { slug: string } }) 
         </article>
       </main>
       <footer className="footer">
-        <div className="wrap"><a href="/">← Torna alla home</a></div>
+        <div className="wrap footer-inner"><a href="/">← Torna alla home</a><a href="/privacy" style={{ textDecoration: 'underline' }}>Privacy</a></div>
       </footer>
     </>
   );
