@@ -38,7 +38,7 @@ export default function CommentForm({articleId}: {articleId: string}) {
     </div>
     <label className="comment-consent">
       <input type="checkbox" checked={consent} onChange={e => setConsent(e.target.checked)}/>
-      <span>Ho letto le regole: niente insulti, dati personali di altre persone o pubblicità. I commenti sono moderati prima della pubblicazione. Salviamo solo nome, testo e data del commento, per pubblicarlo sotto l’articolo; puoi chiederne la rimozione contattando la redazione.</span>
+      <span>Ho letto le regole: niente insulti, dati personali di altre persone o pubblicità. I commenti sono moderati prima della pubblicazione. Salviamo solo nome, testo e data del commento, per pubblicarlo sotto l’articolo; puoi chiederne la rimozione contattando la redazione. Dettagli nell’<a href="/privacy" target="_blank" style={{textDecoration:'underline'}}>informativa privacy</a>.</span>
     </label>
     {state === 'error' && <p role="alert" className="engage-error">{message}</p>}
     <div><button className="btn" type="submit" disabled={state === 'sending'}>{state === 'sending' ? 'Invio…' : 'Invia commento'}</button></div>
