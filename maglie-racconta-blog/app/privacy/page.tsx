@@ -5,12 +5,12 @@ export const metadata = {
   description: 'Come Maglie Racconta tratta i dati personali di lettori, commentatori e collaboratori.'
 };
 
-// ⚠️ DA COMPLETARE prima della pubblicazione: sostituire i valori tra parentesi quadre.
-const TITOLARE = '[DA COMPLETARE: nome e cognome o denominazione del titolare]';
-const SEDE = '[DA COMPLETARE: indirizzo]';
-const EMAIL = '[DA COMPLETARE: email di contatto per la privacy]';
-const CONSERVAZIONE_COMMENTI_NON_APPROVATI = '[DA COMPLETARE: es. 30 giorni]';
-const ULTIMO_AGGIORNAMENTO = '[DA COMPLETARE: data di pubblicazione]';
+// Dati del titolare. Per cambiarli basta modificare queste righe.
+const TITOLARE = 'Angelo Greco';
+const SEDE = 'Via Scorrano 84, scala A, interno 3 – 73024 Maglie (LE)';
+const EMAIL = 'grecoangelo50@gmail.com';
+const CONSERVAZIONE_COMMENTI_NON_APPROVATI = '30 giorni';
+const ULTIMO_AGGIORNAMENTO = '17 novembre 2026';
 
 const isPlaceholder = (v: string) => v.startsWith('[DA COMPLETARE');
 const Val = ({ v }: { v: string }) =>
@@ -31,8 +31,8 @@ export default function Privacy() {
 
           <h2>1. Titolare del trattamento</h2>
           <p>
-            Titolare del trattamento è <Val v={TITOLARE} />, con sede in <Val v={SEDE} />.
-            Per qualsiasi richiesta sulla privacy puoi scrivere a <Val v={EMAIL} />.
+            Titolare del trattamento è <Val v={TITOLARE} />, residente in <Val v={SEDE} />.
+            Per qualsiasi richiesta sulla privacy puoi scrivere a <a href={`mailto:${EMAIL}`} style={{ textDecoration: 'underline' }}>{EMAIL}</a>.
           </p>
 
           <h2>2. Quali dati trattiamo e perché</h2>
