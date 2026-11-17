@@ -30,3 +30,10 @@ Starter autonomo Next.js + Supabase per un magazine locale con articoli, categor
 - Questo pacchetto è una base applicativa da configurare e collaudare: non è ancora pubblicato e non include credenziali, dominio o account Supabase già configurati.
   
 Progetto web Maglie Racconta
+
+## Mi piace, commenti e condivisione
+1. In Supabase → SQL Editor esegui `supabase/engagement.sql` (una sola volta; è rieseguibile).
+2. Sotto ogni articolo compaiono: pulsante "Mi piace", pulsanti di condivisione e commenti.
+3. I commenti restano nascosti finché non li approvi da **Admin → Commenti da moderare** (`/admin/commenti`).
+
+Privacy: i "mi piace" sono un contatore anonimo (nessun IP o cookie); i commenti salvano solo nome, testo e data; i pulsanti di condivisione sono semplici link e non caricano script dei social. Prima di andare online pubblica una pagina privacy con titolare del trattamento e contatti per chiedere la rimozione dei commenti.
