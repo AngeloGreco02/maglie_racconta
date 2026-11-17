@@ -11,7 +11,11 @@ export default async function Home({searchParams}:{searchParams:{q?:string,categ
   if (searchParams?.categoria) query = query.eq('category',searchParams.categoria);
   if (searchParams?.q) query = query.or(`title.ilike.%${searchParams.q}%,excerpt.ilike.%${searchParams.q}%`);
   const {data:articles} = await query;
-  const list = articles || [];
+  // Visualizzazioni: tabella separata, così se views.sql non è ancora attivo la home funziona lo stesso.
+  const ids = (articles || []).map(a => a.id);
+  const {data:views} = ids.length ? await db.from('article_views').select('article_id,view_count').in('article_id', ids) : {data: []};
+  const viewsById = new Map((views || []).map((v:any) => [v.article_id, Number(v.view_count)]));
+  const list = (articles || []).map(a => ({...a, view_count: viewsById.get(a.id) ?? 0}));
   const isFiltered = Boolean(searchParams?.q || searchParams?.categoria);
   const featured = !isFiltered ? list[0] : null;
   const latest = !isFiltered ? list.slice(1,7) : list;

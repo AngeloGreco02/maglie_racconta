@@ -44,7 +44,7 @@ export default function Privacy() {
             (art. 6, par. 1, lett. f GDPR). Sono conservati per il tempo tecnico previsto dal fornitore di hosting.
           </p>
           <p>
-            Il sito non usa strumenti di statistica, pubblicità o profilazione. I caratteri tipografici sono ospitati direttamente
+            Oltre al contatore anonimo delle visualizzazioni descritto più sotto, il sito non usa strumenti di statistica, pubblicità o profilazione. I caratteri tipografici sono ospitati direttamente
             sul sito: il tuo browser non contatta server di terze parti per scaricarli.
           </p>
 
@@ -54,6 +54,15 @@ export default function Privacy() {
             volte per errore, il tuo browser memorizza localmente (nel cosiddetto <em>localStorage</em>) un’indicazione che hai già messo
             “Mi piace” a quell’articolo. Questa informazione resta sul tuo dispositivo, non ci viene inviata e puoi cancellarla in qualsiasi
             momento dalle impostazioni del browser.
+          </p>
+
+          <h3>Contatore delle visualizzazioni</h3>
+          <p>
+            Su ogni articolo mostriamo quante volte è stato letto. È un contatore anonimo: non registriamo chi legge, il suo
+            indirizzo IP né l’orario della lettura, ma solo un numero totale per articolo. Per non contare più volte la stessa lettura
+            quando ricarichi la pagina, il tuo browser memorizza localmente (nel <em>sessionStorage</em>) che hai già aperto
+            quell’articolo; questa informazione resta sul tuo dispositivo, non ci viene inviata e si cancella da sola quando chiudi la
+            scheda. Non si tratta di un cookie e non serve a profilarti.
           </p>
 
           <h3>Commenti</h3>
