@@ -2,6 +2,9 @@ import Header from '@/components/Header';
 import { supabaseServer } from '@/lib/supabase/server';
 import { notFound } from 'next/navigation';
 import sanitizeHtml from 'sanitize-html';
+import LikeButton from '@/components/engagement/LikeButton';
+import ShareButtons from '@/components/engagement/ShareButtons';
+import Comments from '@/components/engagement/Comments';
 
 const cleanArticleHtml = (html: string) => sanitizeHtml(html, {
   allowedTags: [
@@ -59,6 +62,14 @@ export default async function Article({ params }: { params: { slug: string } }) 
 
   if (!article) notFound();
 
+  // Solo i commenti approvati sono leggibili dal pubblico (policy RLS).
+  const { data: comments } = await supabaseServer()
+    .from('article_comments')
+    .select('id,author_name,body,created_at')
+    .eq('article_id', article.id)
+    .eq('status', 'approved')
+    .order('created_at', { ascending: true });
+
   const safeBody = cleanArticleHtml(article.body_html || '');
 
   return (
@@ -80,9 +91,14 @@ export default async function Article({ params }: { params: { slug: string } }) 
             />
           )}
           <div dangerouslySetInnerHTML={{ __html: safeBody }} />
+          <div className="engage-bar">
+            <LikeButton articleId={article.id} initialCount={article.like_count ?? 0} />
+            <ShareButtons title={article.title} />
+          </div>
           <p style={{ fontSize: 13, color: 'var(--muted)' }}>
             Maglie Racconta · La città, le persone, le storie.
           </p>
+          <Comments articleId={article.id} comments={comments || []} />
         </article>
       </main>
       <footer className="footer">

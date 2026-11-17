@@ -9,11 +9,13 @@ export default async function Admin(){
   if(!user)redirect('/admin/login');
   const {data:profile}=await db.from('profiles').select('role').eq('id',user.id).maybeSingle();
   if(profile?.role!=='admin')return <main className="wrap"><h1>Accesso non autorizzato</h1><p>Il tuo account non ha il ruolo amministratore. Contatta chi gestisce il sito.</p><SignOut/></main>;
-  const [{data:articles},{count:pendingCount}] = await Promise.all([
+  const [{data:articles},{count:pendingCount},{count:pendingCommentsCount}] = await Promise.all([
     db.from('articles').select('id,title,slug,status,updated_at,category').order('updated_at',{ascending:false}),
-    db.from('contributor_submissions').select('id',{count:'exact',head:true}).eq('status','pending')
+    db.from('contributor_submissions').select('id',{count:'exact',head:true}).eq('status','pending'),
+    db.from('article_comments').select('id',{count:'exact',head:true}).eq('status','pending')
   ]);
   const pending = pendingCount || 0;
+  const pendingComments = pendingCommentsCount || 0;
   return <main className="wrap">
     <div className="adminbar">
       <div><div className="eyebrow">Redazione</div><h1>Gestione articoli</h1></div>
@@ -21,6 +23,10 @@ export default async function Admin(){
         <Link className="btn" href="/admin/contributi" style={{position:'relative'}}>
           Contributi in attesa
           {pending>0&&<span aria-label={`${pending} contributi in attesa`} style={{display:'inline-flex',alignItems:'center',justifyContent:'center',marginLeft:9,minWidth:23,height:23,padding:'0 6px',borderRadius:999,background:'#f6c453',color:'#172b38',fontSize:13,fontWeight:800}}>{pending}</span>}
+        </Link>
+        <Link className="btn" href="/admin/commenti">
+          Commenti da moderare
+          {pendingComments>0&&<span aria-label={`${pendingComments} commenti in attesa`} style={{display:'inline-flex',alignItems:'center',justifyContent:'center',marginLeft:9,minWidth:23,height:23,padding:'0 6px',borderRadius:999,background:'#f6c453',color:'#172b38',fontSize:13,fontWeight:800}}>{pendingComments}</span>}
         </Link>
         <Link className="btn" href="/admin/articoli/nuovo">+ Nuovo articolo</Link>
         <SignOut/>
