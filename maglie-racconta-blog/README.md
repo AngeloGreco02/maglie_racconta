@@ -37,3 +37,9 @@ Progetto web Maglie Racconta
 3. I commenti restano nascosti finché non li approvi da **Admin → Commenti da moderare** (`/admin/commenti`).
 
 Privacy: i "mi piace" sono un contatore anonimo (nessun IP o cookie); i commenti salvano solo nome, testo e data; i pulsanti di condivisione sono semplici link e non caricano script dei social. Prima di andare online pubblica una pagina privacy con titolare del trattamento e contatti per chiedere la rimozione dei commenti.
+
+## Visualizzazioni
+1. In Supabase → SQL Editor esegui `supabase/views.sql` (una sola volta; è rieseguibile).
+2. Accanto all'autore di ogni articolo compare l'icona a forma di occhio con il numero di visualizzazioni; nelle schede della home il numero appare dopo la data, quando è maggiore di zero.
+
+Privacy: il contatore è anonimo (nessun IP, cookie o orario). Il browser ricorda solo per la scheda aperta, in `sessionStorage`, che l'articolo è già stato contato, così ricaricare la pagina non aumenta il numero. Finché lo script non è eseguito il sito funziona normalmente, senza contatore.

@@ -5,6 +5,7 @@ import sanitizeHtml from 'sanitize-html';
 import LikeButton from '@/components/engagement/LikeButton';
 import ShareButtons from '@/components/engagement/ShareButtons';
 import Comments from '@/components/engagement/Comments';
+import ViewCounter from '@/components/engagement/ViewCounter';
 
 const cleanArticleHtml = (html: string) => sanitizeHtml(html, {
   allowedTags: [
@@ -70,6 +71,13 @@ export default async function Article({ params }: { params: { slug: string } }) 
     .eq('status', 'approved')
     .order('created_at', { ascending: true });
 
+  // Se views.sql non è ancora stato eseguito la query fallisce in silenzio e il contatore parte da 0.
+  const { data: views } = await supabaseServer()
+    .from('article_views')
+    .select('view_count')
+    .eq('article_id', article.id)
+    .maybeSingle();
+
   const safeBody = cleanArticleHtml(article.body_html || '');
 
   return (
@@ -82,7 +90,10 @@ export default async function Article({ params }: { params: { slug: string } }) 
           </div>
           <h1>{article.title}</h1>
           <p className="lead">{article.excerpt}</p>
-          {article.author_name && <p style={{fontSize:14,color:"var(--muted)",marginTop:-6}}>Di {article.author_name}</p>}
+          <p className="article-byline">
+            {article.author_name && <span>Di {article.author_name}</span>}
+            <ViewCounter articleId={article.id} initialCount={Number(views?.view_count ?? 0)} />
+          </p>
           {article.cover_url && (
             <img
               src={article.cover_url}

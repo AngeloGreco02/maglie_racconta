@@ -9,6 +9,11 @@
 .engage-btn:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 .engage-btn.is-active{background:#fbeae5;border-color:var(--rust);color:var(--rust)}
 .engage-count{min-width:22px;padding:1px 7px;border-radius:999px;background:var(--cream);font-size:12px;text-align:center}
+.article-byline{display:flex;flex-wrap:wrap;align-items:center;gap:6px 14px;font-size:14px;color:var(--muted);margin:-6px 0 0}
+.view-count{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.view-count svg{flex:none;position:relative;top:-1px}
+.view-count-small{gap:4px}
+.view-count-small svg{width:13px;height:13px}
 .engage-error{color:var(--rust);font-size:13px;margin:8px 0 0}
 .share{display:flex;flex-wrap:wrap;align-items:center;gap:9px}
 .share-label{font-size:12px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted)}
