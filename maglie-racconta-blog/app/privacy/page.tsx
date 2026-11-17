@@ -7,7 +7,6 @@ export const metadata = {
 
 // Dati del titolare. Per cambiarli basta modificare queste righe.
 const TITOLARE = 'Angelo Greco';
-const SEDE = 'Via Scorrano 84, scala A, interno 3 – 73024 Maglie (LE)';
 const EMAIL = 'grecoangelo50@gmail.com';
 const CONSERVAZIONE_COMMENTI_NON_APPROVATI = '30 giorni';
 const ULTIMO_AGGIORNAMENTO = '17 novembre 2026';
@@ -31,7 +30,7 @@ export default function Privacy() {
 
           <h2>1. Titolare del trattamento</h2>
           <p>
-            Titolare del trattamento è <Val v={TITOLARE} />, residente in <Val v={SEDE} />.
+            Titolare del trattamento è <Val v={TITOLARE} />.
             Per qualsiasi richiesta sulla privacy puoi scrivere a <a href={`mailto:${EMAIL}`} style={{ textDecoration: 'underline' }}>{EMAIL}</a>.
           </p>
 
