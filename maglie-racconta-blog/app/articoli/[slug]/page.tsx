@@ -11,12 +11,14 @@ import { authorHref } from '@/lib/views';
 const cleanArticleHtml = (html: string) => sanitizeHtml(html, {
   allowedTags: [
     'p', 'h2', 'h3', 'h4', 'strong', 'b', 'em', 'i', 'u', 'ul', 'ol', 'li',
-    'blockquote', 'a', 'br', 'hr'
+    'blockquote', 'a', 'br', 'hr', 'figure', 'figcaption', 'img'
   ],
   allowedAttributes: {
-    a: ['href', 'title', 'target', 'rel']
+    a: ['href', 'title', 'target', 'rel'],
+    img: ['src', 'alt', 'width', 'height', 'loading']
   },
   allowedSchemes: ['http', 'https', 'mailto'],
+  allowedSchemesByTag: { img: ['https'] },
   transformTags: {
     a: sanitizeHtml.simpleTransform('a', { rel: 'nofollow noopener noreferrer', target: '_blank' }, true)
   }
