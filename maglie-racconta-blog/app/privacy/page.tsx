@@ -44,7 +44,7 @@ export default function Privacy() {
             (art. 6, par. 1, lett. f GDPR). Sono conservati per il tempo tecnico previsto dal fornitore di hosting.
           </p>
           <p>
-            Oltre al contatore anonimo delle visualizzazioni descritto più sotto, il sito non usa strumenti di statistica, pubblicità o profilazione. I caratteri tipografici sono ospitati direttamente
+            Oltre al contatore anonimo delle visualizzazioni e alle statistiche aggregate descritte più sotto, il sito non usa strumenti di pubblicità o profilazione. I caratteri tipografici sono ospitati direttamente
             sul sito: il tuo browser non contatta server di terze parti per scaricarli.
           </p>
 
@@ -63,6 +63,16 @@ export default function Privacy() {
             quando ricarichi la pagina, il tuo browser memorizza localmente (nel <em>sessionStorage</em>) che hai già aperto
             quell’articolo; questa informazione resta sul tuo dispositivo, non ci viene inviata e si cancella da sola quando chiudi la
             scheda. Non si tratta di un cookie e non serve a profilarti.
+          </p>
+
+          <h3>Statistiche aggregate delle visite</h3>
+          <p>
+            Per capire quali contenuti interessano di più usiamo Vercel Web Analytics, il servizio di statistiche del nostro fornitore
+            di hosting. Raccoglie in forma aggregata la pagina visitata, il sito di provenienza (per esempio un social network), il
+            Paese, il tipo di dispositivo, il sistema operativo e il browser. Non usa cookie, non memorizza l’indirizzo IP e non segue
+            i visitatori tra siti diversi: per distinguere le visite usa un codice temporaneo che viene cancellato ogni 24 ore, per cui
+            non è possibile identificarti. Base giuridica: legittimo interesse a conoscere in forma anonima l’uso del sito
+            (art. 6, par. 1, lett. f GDPR).
           </p>
 
           <h3>Commenti</h3>
@@ -94,7 +104,7 @@ export default function Privacy() {
           <h2>3. Cookie</h2>
           <p>
             Il sito usa esclusivamente cookie tecnici, necessari a mantenere la sessione di chi accede all’area riservata. Non usiamo
-            cookie di profilazione, pubblicitari o statistici di terze parti: per questo non è richiesto un banner di consenso.
+            cookie di profilazione, pubblicitari o statistici (nemmeno le statistiche delle visite usano cookie): per questo non è richiesto un banner di consenso.
           </p>
 
           <h2>4. Chi tratta i dati per nostro conto</h2>
