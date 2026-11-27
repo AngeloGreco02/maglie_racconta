@@ -21,6 +21,7 @@ export default function Header() {
           <a href="/?categoria=Cultura">Cultura</a>
           <a href="/?categoria=Eventi">Eventi</a>
           <a href="/?categoria=Sport">Sport</a>
+          <a href="/?categoria=Scuola">Scuola</a>
           <a href="/?categoria=Persone">Persone</a>
           <a href="/?categoria=Territorio">Territorio</a>
           <a className="nav-cta" href="/collabora">Collabora</a>
