@@ -3,7 +3,7 @@ import {useEffect,useState} from 'react';
 import {useRouter} from 'next/navigation';
 import {supabaseBrowser} from '@/lib/supabase/client';
 
-const categories=['Cronaca','Cultura','Eventi','Sport','Comunità','Scuola','Territorio','Opinioni'];
+const categories=['Cronaca','Politica','Cultura','Eventi','Sport','Comunità','Scuola','Territorio','Opinioni'];
 function slugify(v:string){return v.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');}
 
 export default function SubmitArticle(){

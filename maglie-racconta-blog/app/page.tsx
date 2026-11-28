@@ -4,7 +4,7 @@ import {supabaseServer} from '@/lib/supabase/server';
 import {withViews} from '@/lib/views';
 
 export const revalidate = 0;
-const categories = ['Cronaca', 'Cultura', 'Sport', 'Persone', 'Eventi', 'Territorio'];
+const categories = ['Cronaca', 'Politica', 'Cultura', 'Sport', 'Persone', 'Eventi', 'Territorio'];
 
 export default async function Home({searchParams}:{searchParams:{q?:string,categoria?:string}}) {
   const db = supabaseServer();
