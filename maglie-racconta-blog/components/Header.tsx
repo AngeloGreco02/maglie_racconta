@@ -18,6 +18,7 @@ export default function Header() {
         <nav className="nav">
           <a href="/">Home</a>
           <a href="/?categoria=Cronaca">Cronaca</a>
+          <a href="/?categoria=Politica">Politica</a>
           <a href="/?categoria=Cultura">Cultura</a>
           <a href="/?categoria=Eventi">Eventi</a>
           <a href="/?categoria=Sport">Sport</a>
